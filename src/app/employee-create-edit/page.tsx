@@ -1,14 +1,12 @@
-import { api, HydrateClient } from "@/trpc/server";
+import EmployeeForm from "@/app/_components/EmployeeForm";
 
-export default async function EmployeeCreateEdit() {
-
-  void api.post.getLatest.prefetch();
-
+export default function EmployeeCreateEdit() {
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <h1> Employee Create / Edit</h1>
-      </main>
-    </HydrateClient>
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Create Employee</h1>
+        <EmployeeForm />
+      </div>
+    </main>
   );
 }

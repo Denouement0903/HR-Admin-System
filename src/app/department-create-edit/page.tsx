@@ -1,14 +1,12 @@
-import { api, HydrateClient } from "@/trpc/server";
+import DepartmentForm from "@/app/_components/DepartmentForm";
 
-export default async function DepartmentCreateEdit() {
-
-  void api.post.getLatest.prefetch();
-
+export default function DepartmentCreateEdit() {
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <h1>Department Create / Edit</h1>
-      </main>
-    </HydrateClient>
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Create Department</h1>
+        <DepartmentForm />
+      </div>
+    </main>
   );
 }

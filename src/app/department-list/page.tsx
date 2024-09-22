@@ -1,4 +1,4 @@
-import { api, HydrateClient } from "@/trpc/server";
+import { api, HydrateClient } from "@/server/trpc/server";
 
 export default async function DepartmentList() {
   // Fetch departments directly from the procedure

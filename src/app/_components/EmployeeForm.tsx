@@ -1,6 +1,5 @@
-"use client";
-
-import { useState } from "react";
+"use client"
+import { useState, useEffect } from "react";
 import { api } from "@/trpc/react";
 
 export default function EmployeeForm() {
@@ -10,10 +9,12 @@ export default function EmployeeForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(true);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [managerId, setManagerId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const { data: departments } = api.department.getAll.useQuery();
+  const { data: managers } = api.user.getAll.useQuery();
 
   const createEmployee = api.employee.create.useMutation({
     onSuccess: () => {
@@ -23,6 +24,7 @@ export default function EmployeeForm() {
       setEmail("");
       setStatus(true);
       setSelectedDepartments([]);
+      setManagerId(null);
       setSuccess(true);
       setError(null);
       console.log("Employee created successfully");
@@ -36,7 +38,7 @@ export default function EmployeeForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting form with:", { firstName, lastName, telephone, email, status, selectedDepartments });
+    console.log("Submitting form with:", { firstName, lastName, telephone, email, status, selectedDepartments, managerId });
     setError(null);
     setSuccess(false);
     createEmployee.mutate({
@@ -46,6 +48,7 @@ export default function EmployeeForm() {
       email,
       status,
       departments: selectedDepartments,
+      managerId,
     });
   };
 
@@ -132,6 +135,22 @@ export default function EmployeeForm() {
             <label htmlFor={`dept-${dept.id}`}>{dept.name}</label>
           </div>
         ))}
+      </div>
+      <div>
+        <label htmlFor="manager" className="block mb-2">Manager</label>
+        <select
+          id="manager"
+          value={managerId || ""}
+          onChange={(e) => setManagerId(e.target.value || null)}
+          className="w-full p-2 border rounded"
+        >
+          <option value="">Select a User as manager</option>
+          {managers?.map((manager) => (
+            <option key={manager.id} value={manager.id}>
+              {manager.name}
+            </option>
+          ))}
+        </select>
       </div>
       <button 
         type="submit" 

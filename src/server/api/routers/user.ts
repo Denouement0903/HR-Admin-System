@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, publicProcedure, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
+import { isHRAdmin, isManagerOrHRAdmin, isEmployee } from "@/utils/auth";
 
 export const userRouter = createTRPCRouter({
   login: publicProcedure
@@ -32,9 +33,56 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      // Here you would typically create a session or return a token
-      // For this example, we'll just return the user (excluding the password)
       const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
+    }),
+
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    await isHRAdmin();
+    const users = await ctx.db.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+    });
+    return users;
+  }),
+
+  getEmployees: protectedProcedure.query(async ({ ctx }) => {
+    const user = await isManagerOrHRAdmin();
+    let employees;
+    if (user.role === "hradmin") {
+      employees = await ctx.db.employee.findMany();
+    } else {
+      employees = await ctx.db.employee.findMany({
+        where: { managerId: user.id },
+      });
+    }
+    return employees;
+  }),
+
+  updateEmployee: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+          telephone: z.number().optional(),
+          email: z.string().email().optional(),
+          status: z.boolean().optional(),
+          managerId: z.string().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await isHRAdmin();
+      const updatedEmployee = await ctx.db.employee.update({
+        where: { id: input.id },
+        data: input.data,
+      });
+      return updatedEmployee;
     }),
 });

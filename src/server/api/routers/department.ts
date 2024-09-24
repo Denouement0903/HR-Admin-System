@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-// add protectedProcedure instead of publicProcedure
 
 export const departmentRouter = createTRPCRouter({
   create: publicProcedure
@@ -8,7 +7,7 @@ export const departmentRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         description: z.string().optional(),
-        status: z.string(),  // String type for status
+        status: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -23,7 +22,7 @@ export const departmentRouter = createTRPCRouter({
         id: z.string(),
         name: z.string(),
         description: z.string().optional(),
-        status: z.string(),  // String type for status
+        status: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {

@@ -27,6 +27,7 @@
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "add": "^2.0.6",
+    "alert": "^6.0.2",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "button": "^1.1.1",

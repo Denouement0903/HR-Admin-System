@@ -16,29 +16,24 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.db.user.findUnique({
         where: { email: input.email },
       });
-
       if (!user) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
-
       const isPasswordValid = await bcrypt.compare(input.password, user.password);
-
       if (!isPasswordValid) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Invalid password",
         });
       }
-
       const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
     }),
-
   getAll: protectedProcedure.query(async ({ ctx }) => {
-    await isHRAdmin();
+    await isHRAdmin(ctx);
     const users = await ctx.db.user.findMany({
       select: {
         id: true,
@@ -49,9 +44,8 @@ export const userRouter = createTRPCRouter({
     });
     return users;
   }),
-
   getEmployees: protectedProcedure.query(async ({ ctx }) => {
-    const user = await isManagerOrHRAdmin();
+    const { user } = await isManagerOrHRAdmin(ctx);
     let employees;
     if (user.role === "hradmin") {
       employees = await ctx.db.employee.findMany();
@@ -62,7 +56,6 @@ export const userRouter = createTRPCRouter({
     }
     return employees;
   }),
-
   updateEmployee: protectedProcedure
     .input(
       z.object({
@@ -78,7 +71,7 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await isHRAdmin();
+      await isHRAdmin(ctx);
       const updatedEmployee = await ctx.db.employee.update({
         where: { id: input.id },
         data: input.data,

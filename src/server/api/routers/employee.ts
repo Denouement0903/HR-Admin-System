@@ -4,7 +4,6 @@ import { isHRAdmin, isManagerOrHRAdmin, isEmployee } from "@/utils/auth";
 import { Prisma } from "@prisma/client";
 
 export const employeeRouter = createTRPCRouter({
-  // Create Employee
   create: protectedProcedure
     .input(
       z.object({

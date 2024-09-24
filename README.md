@@ -1,12 +1,18 @@
 # Project details
--To run project on local environment
+-To run project:
     npm run dev
+-To run prisma studio:
+    npx prisma studio
 
--Endpoints/Routes:
+-Endpoints:
     /department-list
     /employee-list
     /department-create-edit
     /employee-create-edit
+
+Email and password logins:
+    hradmin@test.com, manager@test.com, employee@test.com
+    TestPass1234
 
 # 💫 About Me:
 Working on Tech Genius test project for an HR Admin System.

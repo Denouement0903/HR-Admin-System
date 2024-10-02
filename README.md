@@ -1,6 +1,11 @@
 # Project details
 -To run project:
-    npm run dev
+    create .env file in root folder and add values to run environment:
+        DATABASE_URL="file:./db.sqlite"
+        NEXTAUTH_SECRET="/agtwibXzirNAoJ6XFA8XsQphlSMLXHI0OUeBInqXqU="
+        NEXTAUTH_URL="http://localhost:3000"
+        npm run dev
+        
 -To run prisma studio:
     npx prisma studio
 

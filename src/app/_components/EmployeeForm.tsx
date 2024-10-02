@@ -158,7 +158,7 @@ export default function EmployeeForm() {
         disabled={isLoading}
       >
         {isLoading ? 'Creating...' : 'Create Employee'}
-      </button>7
+      </button>
     </form>
   );
 }
